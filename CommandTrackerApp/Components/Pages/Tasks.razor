@@ -1,0 +1,124 @@
+﻿@page "/project/{Id:int}"
+
+
+<h1 class="pb-3">Информация о проекте</h1>
+
+<h5 class="pb-3">
+    Участники проекта:
+</h5>
+
+@if (project.Members == null)
+{
+    <div class="rounded-3 bg-secondary p-3 text-white">
+        <b>Информация об участниках отсутствует</b>
+    </div>
+}
+else if (!project.Members.Any())
+{
+    <div class="rounded-3 bg-secondary p-3 text-white">
+        <b>Участники не назначены</b>
+    </div>
+}
+else
+{
+    <div class="rounded-3 bg-secondary p-3">
+
+        @for (var i = 0; i < members.Count; i++)
+        {
+            <p class="text-white">
+                <span>@project.Members[i].FirstName</span>
+                <span>@project.Members[i].MiddleName</span>
+                <span>@project.Members[i].LastName</span>
+                <span>
+                    -
+                    @if (@project.Members[i].Position == "Лидер")
+                    {
+                        <b>@project.Members[i].Position</b>
+                    }
+                    else
+                    {
+                        <i>@project.Members[i].Position</i>
+                    }
+
+                </span>
+            </p>
+        }
+
+    </div>
+}
+
+<h5 class="pt-5">
+    Список задач (всего задач: @tasks.Count)
+</h5>
+
+<div class="rounded-3 bg-secondary p-3">
+    <table class="table-borderless text-white" style="width: 100%; text-align: center">
+        <tr class="justify-content-around">
+            <th><b>Название</b></th>
+            <th><b>Описание</b></th>
+            <th><b>Ответственный</b></th>
+            <th><b>Создано</b></th>
+            <th><b>Закончить до</b></th>
+            <th><b>Статус</b></th>
+            <th></th>
+
+        </tr>
+
+
+        @for (var i = 0; i < tasks.Count; i++)
+        {
+            <tr class="pt-2 table-content">
+                <th>@tasks[i].Name</th>
+                <th>@tasks[i].Description</th>
+                <th>
+                    @if (tasks[i].AssignedMember == null)
+                    {
+                        <p>Не указан</p>
+                    }
+                    else
+                    {
+                        <p>
+                            @tasks[i]?.AssignedMember?.FirstName
+                            @tasks[i]?.AssignedMember?.MiddleName
+                        </p>
+                    }
+
+                </th>
+
+                <th>@tasks[i].StartedDate?.ToString("dd.MM.yyyy")</th>
+                <th>@tasks[i].FinishedDate?.ToString("dd.MM.yyyy")</th>
+                <th>@tasks[i].Status</th>
+
+                <th class="p-2">
+                    <a href="#">...</a>
+                </th>
+            </tr>
+        }
+    </table>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+
+    @code {
+        ProjectItem project = new ProjectItem { Id = 1, Title = "Нахождение костного мозга", Description = "Создание алгоритмического аппарата", CreatedDate = DateTime.Now, PrivateStatus = 1, Status = 1, Members = members, Tasks = tasks };
+
+        static List<Person> members = new List<Person>
+        {
+            new Person { Id = 1, FirstName = "Мария", MiddleName = "Костьянова", LastName = "Константиновна", Position = "Team лидер" },
+            new Person { Id = 2, FirstName = "Игорь", MiddleName = "Петросянов", LastName = "Харисович", Position = "FrontEnd - разработчик" }
+
+        };
+
+        static List<TaskItem> tasks = new List<TaskItem>
+        {
+            new TaskItem {Id = 1, AssignedMember = members[0], Description = "Распределить задачи между всеми", Name = "Распределение обязанностей", Status = 1, StartedDate = DateTime.Now, FinishedDate = DateTime.Now},
+            new TaskItem {Id = 2, AssignedMember = members[1], Description = "Напсиать сайт для рекламы бизнес-логики", Name = "Пиар продукта", Status = 2, StartedDate = DateTime.Now, FinishedDate = DateTime.Now},
+        };
+
+
+    }
+}

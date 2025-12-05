@@ -1,4 +1,7 @@
 ﻿@page "/"
+@inject NavigationManager navigate
+@rendermode InteractiveServer
+@attribute [Authorize]
 
 <PageTitle>Мои проекты</PageTitle>
 
@@ -10,19 +13,73 @@
     {
         <div class="card m-4">
             <div class="card-header">
-                @project.Title
+                <h5>
+                    <b>@project.Title</b>
+                </h5>
             </div>
 
+
             <div class="card-body">
-                <p>Описание: <span>@project.Description</span></p>
-                <p>Кол-во участников: <span>@project.CountMembers</span></p>
-                <p>Приватность: <span>@project.PrivateStatus</span></p>
-                <p>Статус: <span>@project.Status</span></p>
-                <p>Создано: <span>@project.CreatedDate</span></p>
+                <p>
+                    <b>Описание:</b>
+                    <span>@project.Description</span>
+                </p>
+
+                <p>
+                    <b>Кол-во участников:</b>
+                    @if (project.Members?.Count == null)
+                    {
+                        <span>
+                            0
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
+                            @project.Members.Count
+                        </span>
+                    }
+                </p>
+
+                <p>
+                    <b>Приватность:</b>
+                    @if (project.PrivateStatus == 1)
+                    {
+                        <div class="rounded bg-success private">
+                            <span class="text-white spanprivate">Открыт</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="rounded bg-danger private">
+                            <span class="text-white spanprivate">Закрыт</span>
+                        </div>
+                    }
+                </p>
+
+
+                <p>
+                    <b>Статус:</b>
+                    @if (project.Status == 1)
+                    {
+                        <div class="rounded bg-info status">
+                            <span class="text-white spanstatus">В работе</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="rounded bg-warning status">
+                            <span class="text-white spanstatus">В поисках</span>
+                        </div>
+                    }
+                </p>
+
+
+                <p><b>Создано:</b> <span>@project.CreatedDate?.ToString("dd.MM.yyyy")</span></p>
             </div>
 
             <div class="card-footer">
-                <a class="btn btn-primary" href="#">Перейти...</a>
+                <a class="btn btn-primary" href="project/@project.Id">Перейти...</a>
             </div>
         </div>
 
@@ -32,10 +89,13 @@
 @code {
     IEnumerable<ProjectItem> projects = new List<ProjectItem>
     {
-        new ProjectItem { Id = 1, Title = "Нахождение костного мозга", Description = "Создание алгоритмического аппарата", CountMembers = 4, CreatedDate = DateTime.Now, PrivateStatus = 1, Status = 1  },
-        new ProjectItem { Id = 2, Title = "Нахождение костного мозга", Description = "Создание алгоритмического аппарата", CountMembers = 4, CreatedDate = DateTime.Now, PrivateStatus = 1, Status = 1  }
+        new ProjectItem { Id = 1, Title = "Нахождение костного мозга", Description = "Создание алгоритмического аппарата", CreatedDate = DateTime.Now, PrivateStatus = 1, Status = 1, Members = members },
+        new ProjectItem { Id = 2, Title = "Нахождение костного мозга", Description = "Создание алгоритмического аппарата", CreatedDate = DateTime.Now, PrivateStatus = 2, Status = 2  }
 
     };
 
-
+    static List<Person> members = new List<Person>
+    {
+        new Person { Id = 1, FirstName = "Мария", MiddleName = "Костьянова", LastName = "Константиновна" }
+    };
 }

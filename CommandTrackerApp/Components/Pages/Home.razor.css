@@ -1,3 +1,12 @@
-﻿.project{
-    min-width: fit-content !important;
+﻿.private, .status {
+    text-align: center;
+    padding: 6px !important;
+}
+
+.private {
+    max-width: 100px !important;
+}
+
+.status {
+    max-width: 120px !important;
 }
